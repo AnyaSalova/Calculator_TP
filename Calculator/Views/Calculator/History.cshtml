@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "История";
+}
+
+<h2>История операций</h2>
+
+@{
+    var cookie = Context.Request.Cookies["LastOperation"];
+    if (cookie != null)
+    {
+        string operation = cookie;
+        string[] operators = { "+", "-", "*", "/" };
+        int opIndex = -1;
+        foreach (string op in operators)
+        {
+            opIndex = operation.IndexOf(op);
+            if (opIndex >= 0) break;
+        }
+        
+        if (opIndex >= 0)
+        {
+            string op = operation[opIndex].ToString();
+            string wordOp = "";
+            switch (op)
+            {
+                case "+":
+                    wordOp = "плюс";
+                    break;
+                case "-":
+                    wordOp = "минус";
+                    break;
+                case "*":
+                    wordOp = "умножить на";
+                    break;
+                case "/":
+                    wordOp = "разделить на";
+                    break;
+            }
+            
+            operation = operation.Remove(opIndex, 1).Insert(opIndex, " " + wordOp + " ");
+        }
+        
+        <p>@operation</p>
+    }
+    else
+    {
+        <p>История пуста</p>
+    }
+}
